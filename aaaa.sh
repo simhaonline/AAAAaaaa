@@ -12,6 +12,16 @@ function main {
 
     timestamp=$(date '+%Y%m%d%H%M%S')
 
+    if [[ "$1" -eq "-p" ]]; then
+        if [[ -z "$2" ]]; then
+            e "Prefix not specified."
+            exit 1
+        fi
+
+        master_prefix="$2"'_'
+        shift 2
+    fi
+
     args="$@"
     if [[ -z "$args" ]]; then
         args="$(ls "$SLAVE_DIR" | sed -nr 's/(.+)\.sh$/\1/p')"
@@ -22,7 +32,7 @@ function main {
         slave_script="${SLAVE_DIR}/${slave_container}.sh"
         slave_archive="$(hostname)_${slave_container}_${timestamp}.tar"
         slave_archive_list="$slave_archive $slave_archive_list"
-        master_archive="$(hostname)_${timestamp}.tar.gz"
+        master_archive="$(hostname)_${master_prefix}${timestamp}.tar.gz"
 
         if [[ ! -f "$slave_script" ]]; then
             e "${slave_script} does not exist."
