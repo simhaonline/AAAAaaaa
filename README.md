@@ -33,7 +33,7 @@ The __master__ script (`aaaa.sh`) is responsible for giving orders to the slave 
 
 ### Slave
 
-The __slave__ scripts (`slaves/*.sh`) are the container-specific scripts that do the actual backup work. That's why they're called slaves.
+The __slave__ scripts (`slaves/*.sh`) are the container-specific scripts that do the actual backup work. That's why they're called slaves you know.
 
 #### Template
 
