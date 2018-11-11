@@ -19,7 +19,7 @@ function main {
         slave_archive="${HOSTNAME}_${slave_container}_${timestamp}.tar"
         master_archive="${HOSTNAME}_${timestamp}.tar.gz"
 
-        if [[ ! -f slave ]]; then
+        if [[ ! -f "$slave_script" ]]; then
             e "${slave_script} does not exist."
             exit 1
         fi
@@ -49,7 +49,7 @@ function launch {
     script="$2"
     archive="$3"
 
-    cat "$script" | lxc exec "$container" -- ARCHIVE="$archive" bash
+    (printf "export ARCHIVE='$archive';\n"; cat "$script") | lxc exec "$container" -- bash
 }
 
 function d {
