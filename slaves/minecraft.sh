@@ -3,7 +3,7 @@ function main {
     systemctl stop minecraft.service || { e "Could not stop minecraft server."; exit 1; }
 
     d "Saving the world..."
-    tar cvf "$ARCHIVE" /home/minecraft/world || { e "Could not create tarball."; exit 1; }
+    tar cvf "$ARCHIVE" /home/minecraft/world /home/minecraft/*.json /home/minecraft/server.properties || { e "Could not create tarball."; exit 1; }
 
     d "Starting Minecraft server..."
     systemctl start minecraft.service || { e "Could not start minecraft server."; exit 1; }
