@@ -39,8 +39,6 @@ function main {
             lxc start "$slave_container" || { e "Container $slave_container could not be started."; exit 1; }
         fi
 
-        touch "$master_archive"
-
         d "${slave_container}: $slave_script $slave_archive"
         launch "$slave_container" "$slave_script" "$slave_archive"
 
