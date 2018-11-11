@@ -8,11 +8,11 @@ A container that shall be backed up needs its own script located in `slaves/exam
 
 ### Master
 
-The __master__ script is responsible for giving orders to the slave scripts and harvesting the backup archives.
+The __master__ script (`aaaa.sh`) is responsible for giving orders to the slave scripts and harvesting the backup archives.
 
 ### Slave
 
-The __slave__ scripts are the scripts that do the actual backup work. That's why they're slaves.
+The __slave__ scripts (`slaves/*.sh`) are the scripts that do the actual backup work. That's why they're called slaves.
 
 A slave script is always associated with a container.
 
@@ -21,10 +21,10 @@ A slave script is always associated with a container.
 Running
 
 ```
-./master.sh <container>...
+./aaaa.sh <container>...
 ```
 
-will create a complete backup tarball `<hostname>_<timestamp>.tar.gz` in the current directory.
+will create a complete backup tarball `<hostname>_<timestamp>.tar.gz` in the current directory containing all partial backups from the specified list of containers.
 
 ## License
 
