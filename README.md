@@ -5,7 +5,7 @@ A dead simple backup ecosystem for our miserable LXD containers.
 ## Usage
 
 ```
-./aaaa.sh [<container>...]
+./aaaa.sh [-p <prefix>] [<container>...]
 ```
 
 Create a complete backup tarball in the current directory containing all partial backup tarballs from the specified list of containers.
@@ -20,6 +20,9 @@ Create a complete backup tarball in the current directory containing all partial
 
 If no containers are specified, then _all_ available slave scripts will be triggered.
 
+### Options
+
+- `-p <prefix>` Add a prefix to the generated tarball filename. The format will be `<hostname>_<prefix>_<timestamp>.tar.gz`.
 
 > __Protip!__ The last line of the output is the filename of the freshly created backup.
 
