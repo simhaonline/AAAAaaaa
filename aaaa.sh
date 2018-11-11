@@ -14,7 +14,7 @@ function main {
 
     args="$@"
     if [[ -z "$args" ]]; then
-        args="$(ls "$SLAVE_DIR")"
+        args="$(ls "$SLAVE_DIR" | sed -nr 's/(.+)\.sh$/\1/p')"
     fi
 
     for arg in $args; do
