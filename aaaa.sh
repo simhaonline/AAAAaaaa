@@ -37,6 +37,8 @@ function main {
             d "Container $slave_container is not running."
             d "Starting $slave_container..."
             lxc start "$slave_container" || { e "Container $slave_container could not be started."; exit 1; }
+            d "Waiting for container to be ready..."
+            sleep 10
         fi
 
         d "${slave_container}: $slave_script $slave_archive"
