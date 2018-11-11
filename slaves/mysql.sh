@@ -1,8 +1,14 @@
 function main {
     d "Dumping all MySQL databases..."
-    mysqldump --all-databases -r backup.sql || { e "Failed to dump databases."; exit 1; }
-    tar cvf "$ARCHIVE" backup.sql || { e "Could not create tarball."; exit 1; }
-    rm -v backup.sql
+    for db in $(mysql -e 'show databases' --skip-column-names --batch | grep -v '^\(information_schema\|performance_schema\|sys\)$'); do
+
+        mysqldump --databases "$db" -r "$db.sql" || { e "Failed to dump database $db."; exit 1; }
+
+        files="$db.sql $files"
+    done
+
+    tar cvf "$ARCHIVE" $files || { e "Could not create tarball."; exit 1; }
+    rm -v $files
 }
 
 function d {
