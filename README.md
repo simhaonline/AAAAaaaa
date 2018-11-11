@@ -14,7 +14,9 @@ The __master__ script (`aaaa.sh`) is responsible for giving orders to the slave 
 
 The __slave__ scripts (`slaves/*.sh`) are the scripts that do the actual backup work. That's why they're called slaves.
 
-A slave script is always associated with a container.
+#### Environment
+
+- `ARCHIVE`: Path to the target tarball file that the slave shall create.
 
 ## Usage
 
@@ -25,6 +27,23 @@ Running
 ```
 
 will create a complete backup tarball `<hostname>_<timestamp>.tar.gz` in the current directory containing all partial backups from the specified list of containers.
+
+### Example
+
+Doing
+
+```
+./aaaa.sh minecraft mysql nextcloud
+```
+
+would produce
+
+```
+zion_20181111223344.tar.gz
+|-- zion_minecraft_20181111223344.tar
+|-- zion_mysql_20181111223344.tar
+|-- zion_nextcloud_20181111223344.tar
+```
 
 ## License
 
