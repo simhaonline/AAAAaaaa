@@ -4,11 +4,10 @@ function main {
     d "Disable auto save and save world..."
     cmd "save-off"
     cmd "save-all"
-    sleep 30
-    sync
+    sleep 10
 
     d "Create tarball..."
-    tar cvf "$ARCHIVE" /home/minecraft/world /home/minecraft/*.json /home/minecraft/server.properties || { e "Could not create tarball."; cmd "save-on"; say "Backup sequence incomplete. Please notify an administrator."; exit 1; }
+    tar cvf "$ARCHIVE" /home/minecraft/world /home/minecraft/banned-ips.json /home/minecraft/banned-players.json /home/minecraft/ops.json /home/minecraft/whitelist.json /home/minecraft/server.properties || { e "Could not create tarball."; cmd "save-on"; say "Backup sequence incomplete. Please notify an administrator."; exit 1; }
     sync
 
     d "Enable auto save..."
