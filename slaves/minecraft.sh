@@ -6,7 +6,7 @@ function main {
     sleep 2
 
     d "Create tarball..."
-    tar cvf "$ARCHIVE" /home/minecraft/world /home/minecraft/*.json /home/minecraft/server.properties || { e "Could not create tarball."; cmd "save-on"; exit 1; }
+    tar cvf "$ARCHIVE" /home/minecraft/world /home/minecraft/*.json /home/minecraft/server.properties || { e "Could not create tarball."; cmd "save-on"; sleep 2; say "Backup sequence incomplete. Please notify an administrator."; exit 1; }
     sync
 
     d "Enable auto save..."
