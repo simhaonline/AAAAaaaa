@@ -1,20 +1,31 @@
 function main {
-    sudo -u minecraft -- screen -p 0 -S mc -X eval 'stuff "say Initiate backup sequence..."\\015' || { e "Could not reach screen."; exit 1; }
+    say "Initiate backup sequence..."
 
     d "Disable auto save..."
-    sudo -u minecraft -- screen -p 0 -S mc -X eval 'stuff "save-off"\\015' || { e "Could not reach screen."; exit 1; }
-
-    d "Save the world..."
-    sudo -u minecraft -- screen -p 0 -S mc -X eval 'stuff "save-all"\\015' || { e "Could not reach screen."; exit 1; }
-    sleep 10
+    cmd "save-off"
+    sleep 2
 
     d "Create tarball..."
-    tar cvf "$ARCHIVE" /home/minecraft/world /home/minecraft/*.json /home/minecraft/server.properties || { e "Could not create tarball."; sudo -u minecraft -- screen -p 0 -S mc -X eval 'stuff "save-on"\\015'; exit 1; }
+    tar cvf "$ARCHIVE" /home/minecraft/world /home/minecraft/*.json /home/minecraft/server.properties || { e "Could not create tarball."; cmd "save-on"; exit 1; }
+    sync
 
     d "Enable auto save..."
-    sudo -u minecraft -- screen -p 0 -S mc -X eval 'stuff "save-on"\\015' || { e "Could not reach screen."; exit 1; }
+    cmd "save-on"
+    sleep 2
 
-    sudo -u minecraft -- screen -p 0 -S mc -X eval 'stuff "say Backup sequence complete."\\015' || { e "Could not reach screen."; exit 1; }
+    d "Save world..."
+    cmd "save-all"
+    sleep 2
+
+    say "Backup sequence complete."
+}
+
+function cmd {
+    sudo -u minecraft -- screen -S mc -p 0 -X stuff "$@\\015" || { e "Could not reach screen."; exit 1; }
+}
+
+function say {
+    cmd "say $@"
 }
 
 function d {
