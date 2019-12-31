@@ -1,20 +1,20 @@
 function main {
     say "Initiate backup sequence..."
 
-    d "Disable auto save and save world..."
-    cmd "save-off"
-    cmd "save-all"
-    # sleep 10
-
-    d "Wait until open fds are closed..."
-    lsof +r10 +D /home/minecraft/world
+    saveoff
+    saveall
 
     d "Create tarball..."
-    tar cvf "$ARCHIVE" /home/minecraft/world || { e "Could not create tarball."; cmd "save-on"; say "Backup sequence incomplete. Please notify an administrator."; exit 1; }
+    tar cvf "$ARCHIVE" /home/minecraft/world /home/minecraft/*.json /home/minecraft/server.properties
 
-    d "Enable auto save..."
-    cmd "save-on"
+    if [[ $? != 0 ]] || [[ $? != 1 ]]; then
+        e "Could not create tarball."
+        saveon
+        say "Backup sequence incomplete. Please notify an administrator.";
+        exit 1
+    fi
 
+    saveon
     say "Backup sequence complete."
 }
 
@@ -24,6 +24,24 @@ function cmd {
 
 function say {
     cmd "say $@"
+}
+
+function saveon {
+    d "Enable auto save"
+    cmd "save-on"
+    sleep 30
+}
+
+function saveoff {
+    d "Disable auto save"
+    cmd "save-off"
+    sleep 30
+}
+
+function saveall {
+    d "Save world"
+    cmd "save-all"
+    sleep 30
 }
 
 function d {
