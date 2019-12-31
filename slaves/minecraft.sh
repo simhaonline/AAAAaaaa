@@ -7,7 +7,7 @@ function main {
     # sleep 10
 
     d "Wait until open fds are closed..."
-    lsof +D +r10 /home/minecraft/world
+    lsof +r10 +D /home/minecraft/world
 
     d "Create tarball..."
     tar cvf "$ARCHIVE" /home/minecraft/world || { e "Could not create tarball."; cmd "save-on"; say "Backup sequence incomplete. Please notify an administrator."; exit 1; }
