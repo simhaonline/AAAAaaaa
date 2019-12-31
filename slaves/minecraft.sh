@@ -2,6 +2,7 @@ function main {
     say "Initiate backup sequence..."
 
     saveoff
+    trap finish EXIT
     saveall
 
     d "Create tarball..."
@@ -9,12 +10,12 @@ function main {
 
     if [[ $? != 0 ]] || [[ $? != 1 ]]; then
         e "Could not create tarball."
-        saveon
         say "Backup sequence incomplete. Please notify an administrator."
         exit 1
     fi
 
     saveon
+    trap EXIT
     say "Backup sequence complete."
 }
 
@@ -42,6 +43,11 @@ function saveall {
     d "Save world"
     cmd "save-all"
     sleep 30
+}
+
+function finish {
+    saveon
+    exit 1
 }
 
 function d {
