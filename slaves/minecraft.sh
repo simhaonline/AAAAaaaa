@@ -10,7 +10,7 @@ function main {
     if [[ $? != 0 ]] || [[ $? != 1 ]]; then
         e "Could not create tarball."
         saveon
-        say "Backup sequence incomplete. Please notify an administrator.";
+        say "Backup sequence incomplete. Please notify an administrator."
         exit 1
     fi
 
