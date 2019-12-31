@@ -1,4 +1,4 @@
 /.vagrant/
-*.log
+/*.log
 *.tar
 *.tar.gz
