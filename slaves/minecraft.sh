@@ -8,7 +8,7 @@ function main {
     d "Create tarball..."
     tar cvf "$ARCHIVE" /home/minecraft/world /home/minecraft/*.json /home/minecraft/server.properties
 
-    if [[ $? != 0 ]] || [[ $? != 1 ]]; then
+    if [[ $? != 0 ]] && [[ $? != 1 ]]; then
         e "Could not create tarball."
         say "Backup sequence incomplete. Please notify an administrator."
         exit 1
