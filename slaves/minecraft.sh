@@ -6,8 +6,8 @@ function main {
 
     d "Create tarball..."
     tar cvf "$ARCHIVE" /home/minecraft/world /home/minecraft/*.json /home/minecraft/server.properties
-
-    if [[ $? != 0 ]] || [[ $? != 1 ]]; then
+    exitcode="$?"
+    if [[ $exitcode != 0 ]] || [[ $exitcode != 1 ]]; then
         e "Could not create tarball."
         saveon
         say "Backup sequence incomplete. Please notify an administrator."
