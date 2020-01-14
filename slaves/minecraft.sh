@@ -2,19 +2,21 @@ function main {
     say "Initiate backup sequence..."
 
     saveoff
+    trap finish EXIT
     saveall
 
     d "Create tarball..."
     tar cvf "$ARCHIVE" /home/minecraft/world /home/minecraft/*.json /home/minecraft/server.properties
+
     exitcode="$?"
-    if [[ $exitcode != 0 ]] || [[ $exitcode != 1 ]]; then
+    if [[ $exitcode != 0 ]] && [[ $exitcode != 1 ]]; then
         e "Could not create tarball."
-        saveon
         say "Backup sequence incomplete. Please notify an administrator."
         exit 1
     fi
 
     saveon
+    trap EXIT
     say "Backup sequence complete."
 }
 
@@ -42,6 +44,11 @@ function saveall {
     d "Save world"
     cmd "save-all"
     sleep 30
+}
+
+function finish {
+    saveon
+    exit 1
 }
 
 function d {
