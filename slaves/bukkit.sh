@@ -21,7 +21,7 @@ function main {
 }
 
 function cmd {
-    sudo -u bukkit -- screen -S mc -p 0 -X stuff "$@\\015" || { e "Could not reach screen."; exit 1; }
+    sudo -u bukkit -- screen -S bukkit -p 0 -X stuff "$@\\015" || { e "Could not reach screen."; exit 1; }
 }
 
 function say {
