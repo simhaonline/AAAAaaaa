@@ -6,7 +6,7 @@ function main {
     saveall
 
     d "Create tarball..."
-    tar cvf "$ARCHIVE" /home/bukkit/world* /home/bukkit/*.json /home/bukkit/*.yml /home/bukkit/server.properties
+    tar cvf "$ARCHIVE" /home/bukkit/world* /home/bukkit/*.json /home/bukkit/*.yml /home/bukkit/server.properties /home/bukkit/plugins
 
     exitcode="$?"
     if [[ $exitcode != 0 ]] && [[ $exitcode != 1 ]]; then
