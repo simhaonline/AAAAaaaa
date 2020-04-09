@@ -28,6 +28,12 @@ If no containers are specified, then _all_ available slave scripts will be trigg
 
 ## Get started
 
+Create a `.env` file and configure things as needed.
+
+```bash
+cp .env.example .env
+```
+
 A container that we want to backup needs to have its own script `slaves/example.sh` where `example` is the name of the container.
 
 ### Master

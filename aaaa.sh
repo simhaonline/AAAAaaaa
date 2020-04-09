@@ -3,12 +3,20 @@
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SLAVE_DIR="$ROOT_DIR/slaves"
 
+. "$ROOT_DIR/.env"
+
 function main {
     d "Initializing backup sequence..."
     d "Host: $(uname -a)"
 
     lxc info &>/dev/null || { e "LXD not found."; exit 1; }
     tar --version &>/dev/null || { e "tar not found."; exit 1; }
+    openssl version &>/dev/null || { e "openssl not found."; exit 1; }
+
+    if [[ -z "$AAAA_PASSWORD" ]]; then
+        e "AAAA_PASSWORD is blank or not set! Check your .env file."
+        exit 1
+    fi
 
     timestamp=$(date '+%Y%m%d%H%M%S')
 
@@ -33,6 +41,7 @@ function main {
         slave_archive="$(hostname)_${slave_container}_${timestamp}.tar"
         slave_archive_list="$slave_archive $slave_archive_list"
         master_archive="$(hostname)_${master_prefix}${timestamp}.tar.gz"
+        master_archive_encrypted="$master_archive".enc
 
         if [[ ! -f "$slave_script" ]]; then
             e "${slave_script} does not exist."
@@ -61,13 +70,18 @@ function main {
     done
 
     d "Compressing backups..."
-    tar czvf "$master_archive" $slave_archive_list
+    tar czvf "$master_archive" $slave_archive_list || { e "Failed to compress archives!"; exit 1; }
 
+    d "Encrypting..."
+    openssl enc -aes-256-cbc -k “$AAAA_PASSWORD” -in "$master_archive" -out "$master_archive_encrypted" { e "Encryption process failed!"; exit 1; }
+
+    d "Cleaning up..."
     rm -v $slave_archive_list
+    rm -v "$master_archive"
 
     d "Great success!"
 
-    echo "$master_archive"
+    echo "$master_archive_encrypted"
 }
 
 function launch {
