@@ -8,13 +8,13 @@ A dead simple backup ecosystem for our miserable LXD containers.
 ./aaaa.sh [-p <prefix>] [<container>...]
 ```
 
-Create a complete backup tarball in the current directory containing all partial backup tarballs from the specified list of containers.
+Create an encrypted backup tarball containing all partial backups from the specified list of containers.
 
 ```
-<hostname>_<timestamp>.tar.gz
-|-- <hostname>_<container1>_<timestamp>.tar.gz
-|-- <hostname>_<container2>_<timestamp>.tar.gz
-|-- <hostname>_<container3>_<timestamp>.tar.gz
+<hostname>_<timestamp>.tar.gz.enc
+|-- <hostname>_<container1>_<timestamp>.tar
+|-- <hostname>_<container2>_<timestamp>.tar
+|-- <hostname>_<container3>_<timestamp>.tar
 ```
 
 
@@ -38,15 +38,44 @@ A container that we want to backup needs to have its own script `slaves/example.
 
 ### Master
 
-The __master__ script (`aaaa.sh`) is responsible for giving orders to the slave scripts and harvesting the backup archives.
+The __master__ script (`aaaa.sh`) is responsible for calling the slave scripts and harvesting the backup archives that they produce.
 
-### Slave
+The following example will expect two containers (`foo` and `bar`) as well as two slave scripts (`slaves/foo.sh` and `slaves/bar.sh`).
 
-The __slave__ scripts (`slaves/*.sh`) are the container-specific scripts that do the actual backup work. That's why they're called slaves you know.
+```bash
+./aaaa.sh foo bar
+```
+
+After running this command you will end up with an encrypted master backup archive (perhaps `myserver_20200409150000.tar.gz.enc`) that contains both partial backups (perhaps `foo_20200409150000.tar` and `bar_20200409150000.tar`).
+
+### Slaves
+
+The __slave__ scripts (`slaves/*.sh`) are the container-specific scripts that do the actual backup work inside the container.
+
+Each slave script is supposed to deliver an archive holding whatever needs to be backed up. The path to the target tarball file is passed down to the slave script as the `$ARCHIVE` environment variable.
+
+A slave script should always exit with a non-zero status code if they fail in order to communicate that something went wrong to the calling master script.
+
+#### Environment Variables
+
+The following environment variables are available inside slave scripts:
+
+- `$ARCHIVE`: Path to the target tarball file that the slave script shall output.
+
+### Crons
+
+Your `crontab` could look something along the lines of this:
+
+```
+0 * * * * /path/to/crons/hourly.sh >/dev/null 2>&1
+...
+```
+
+Example cron scripts are available in `crons/`.
 
 #### Template
 
-Here's a script template to get started:
+Here's a __slave__ script template to get started:
 
 ```bash
 function main {
@@ -75,11 +104,19 @@ You get the general idea.
 
 > __Protip!__ Make sure that your slave script exits with a non-zero status if it cannot create the tarball for some reason.
 
-#### Environment variables
+### Config
 
-The following environment variables are available inside slave scripts:
+The following environment variables can be set in the `.env` file:
 
-- `ARCHIVE`: Path to the target tarball file that the slave shall create.
+- `$AAAA_WORKING_DIRECTORY`: The directory where backups will be stored.
+- `$AAAA_LOGFILE`: Path to a log file.
+
+- `$AAAA_KEEP_LAST_HOURLY`: Number of most recent hourly backups to keep.
+- `$AAAA_KEEP_LAST_DAILY`: Number of most recent daily backups to keep.
+- `$AAAA_KEEP_LAST_WEEKLY`: Number of most recent weekly backups to keep.
+
+- `$AAAA_PASSWORD`: Password to be used during backup encryption.
+
 
 ## License
 
