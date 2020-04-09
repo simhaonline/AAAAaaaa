@@ -73,7 +73,7 @@ function main {
     tar czvf "$master_archive" $slave_archive_list || { e "Failed to compress archives!"; exit 1; }
 
     d "Encrypting..."
-    openssl enc -aes-256-cbc -k “$AAAA_PASSWORD” -in "$master_archive" -out "$master_archive_encrypted" || { e "Encryption process failed!"; exit 1; }
+    openssl enc -aes-256-cbc -k "$AAAA_PASSWORD" -in "$master_archive" -out "$master_archive_encrypted" || { e "Encryption process failed!"; exit 1; }
 
     d "Cleaning up..."
     rm -v $slave_archive_list
