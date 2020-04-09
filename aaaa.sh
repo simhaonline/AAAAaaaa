@@ -35,13 +35,14 @@ function main {
         args="$(ls "$SLAVE_DIR" | sed -nr 's/(.+)\.sh$/\1/p')"
     fi
 
+    master_archive="$(hostname)_${master_prefix}${timestamp}.tar.gz"
+    master_archive_encrypted="$master_archive".enc
+
     for arg in $args; do
         slave_container="$arg"
         slave_script="${SLAVE_DIR}/${slave_container}.sh"
         slave_archive="$(hostname)_${slave_container}_${timestamp}.tar"
         slave_archive_list="$slave_archive $slave_archive_list"
-        master_archive="$(hostname)_${master_prefix}${timestamp}.tar.gz"
-        master_archive_encrypted="$master_archive".enc
 
         if [[ ! -f "$slave_script" ]]; then
             e "${slave_script} does not exist."
