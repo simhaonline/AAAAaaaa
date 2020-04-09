@@ -8,7 +8,7 @@ A dead simple backup ecosystem for our miserable LXD containers.
 ./aaaa.sh [-p <prefix>] [<container>...]
 ```
 
-Create an encrypted backup tarball containing all partial backups from the specified list of containers.
+Create an encrypted backup tarball containing all partial backups from the specified list of containers. The output file will be written to the current directory.
 
 ```
 <hostname>_<timestamp>.tar.gz.enc
@@ -16,7 +16,6 @@ Create an encrypted backup tarball containing all partial backups from the speci
 |-- <hostname>_<container2>_<timestamp>.tar
 |-- <hostname>_<container3>_<timestamp>.tar
 ```
-
 
 If no containers are specified, then _all_ available slave scripts will be triggered.
 
@@ -46,7 +45,7 @@ The following example will expect two containers (`foo` and `bar`) as well as tw
 ./aaaa.sh foo bar
 ```
 
-After running this command you will end up with an encrypted master backup archive (perhaps `myserver_20200409150000.tar.gz.enc`) that contains both partial backups (perhaps `foo_20200409150000.tar` and `bar_20200409150000.tar`).
+After running this command you will end up with an encrypted master backup archive (perhaps `myserver_20200409150000.tar.gz.enc`) that contains both partial backups (perhaps `myserver_foo_20200409150000.tar` and `myserver_bar_20200409150000.tar`).
 
 ### Slaves
 
